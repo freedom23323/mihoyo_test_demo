@@ -21,6 +21,9 @@ namespace StarterAssets
         [Tooltip("Sprint speed of the character in m/s")]
         public float SprintSpeed = 5.335f;
 
+        [Tooltip("the ground friction slows the object down.")]
+        public float GroundFriction = 1f;
+        
         [Tooltip("How fast the character turns to face movement direction")]
         [Range(0.0f, 0.3f)]
         public float RotationSmoothTime = 0.12f;
@@ -158,6 +161,7 @@ namespace StarterAssets
 
             JumpAndGravity();
             GroundedCheck();
+            CheckGroundSpeed();
             Move();
         }
 
@@ -190,6 +194,27 @@ namespace StarterAssets
             }
         }
 
+        private void CheckGroundSpeed()
+        {
+            RaycastHit hit;
+            // 从角色脚底下一点的位置向下发射射线
+            if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out hit, 0.3f))
+            {
+                string groundTag = hit.collider.tag;
+                switch (groundTag)
+                {
+                    case "Mud":
+                        GroundFriction = 0.5f; // 泥地减速 50%
+                        break;
+                    case "Ice":
+                        GroundFriction = 1.5f; // 冰面加速 50%
+                        break;
+                    default:
+                        GroundFriction = 1f;        // 正常速度
+                        break;
+                }
+            }
+        }
         private void CameraRotation()
         {
             // if there is an input and camera position is not fixed
@@ -216,6 +241,7 @@ namespace StarterAssets
             // set target speed based on move speed, sprint speed and if sprint is pressed
             float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
 
+            targetSpeed *= GroundFriction;
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
             // note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
