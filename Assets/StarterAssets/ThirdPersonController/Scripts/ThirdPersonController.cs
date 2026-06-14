@@ -27,6 +27,12 @@ namespace StarterAssets
         [Tooltip("How fast the character turns to face movement direction")]
         [Range(0.0f, 0.3f)]
         public float RotationSmoothTime = 0.12f;
+        
+        [Header("状态变量")]
+        public bool isCarryingOre = false; // 玩家手上目前是否有矿
+
+        [Header("视觉表现（玩家手里的矿石模型，可不填）")]
+        public GameObject heldOreVisual;
 
         [Tooltip("Acceleration and deceleration")]
         public float SpeedChangeRate = 10.0f;
@@ -149,6 +155,7 @@ namespace StarterAssets
 #endif
 
             AssignAnimationIDs();
+            UpdateVisual();
 
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
@@ -169,7 +176,27 @@ namespace StarterAssets
         {
             CameraRotation();
         }
+        // 捡起矿
+        public void PickUpOre()
+        {
+            isCarryingOre = true;
+            UpdateVisual();
+        }
 
+        // 放下矿
+        public void DropOre()
+        {
+            isCarryingOre = false;
+            UpdateVisual();
+        }
+
+        private void UpdateVisual()
+        {
+            if (heldOreVisual != null)
+            {
+                heldOreVisual.SetActive(isCarryingOre);
+            }
+        }
         private void AssignAnimationIDs()
         {
             _animIDSpeed = Animator.StringToHash("Speed");
