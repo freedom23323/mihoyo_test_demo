@@ -8,6 +8,7 @@ public class ObjectRotator : MonoBehaviour
     [SerializeField] private float rotateAngle = -90f;          // 逆时针旋转90度（Unity中顺时针为正，逆时针为负）
     [SerializeField] private float duration = 0.5f;             // 旋转动画持续时间（秒）
 
+    public GameObject interactHintUI; 
     private bool isPlayerInZone = false; // 玩家是否在交互范围内
     private bool isRotating = false;     // 物体是否正在旋转中（防止重复触发乱套）
     private Quaternion targetRotation;   // 目标旋转角度
@@ -16,6 +17,7 @@ public class ObjectRotator : MonoBehaviour
     {
         // 初始化目标旋转为当前旋转
         targetRotation = transform.localRotation;
+        interactHintUI.SetActive(false); 
     }
 
     void Update()
@@ -62,6 +64,7 @@ public class ObjectRotator : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             isPlayerInZone = true;
+            interactHintUI.SetActive(true); 
             Debug.Log("靠近可旋转物体，按 F 键触发旋转");
         }
     }
@@ -70,6 +73,7 @@ public class ObjectRotator : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            interactHintUI.SetActive(false); 
             isPlayerInZone = false;
             Debug.Log("离开物体范围");
         }

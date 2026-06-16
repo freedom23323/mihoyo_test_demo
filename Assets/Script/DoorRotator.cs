@@ -93,6 +93,7 @@ public class DoorRotator : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            Debug.Log("door!");
             isPlayerInZone = true;
             
             // 尝试获取玩家身上的背包组件并缓存起来

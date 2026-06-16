@@ -62,6 +62,7 @@ public class GroupGlowController : MonoBehaviour
     // 执行批量控光的函数
     private void UpdateGroupGlow()
     {
+        Debug.Log(isGlowing);
         if (childRenderers == null || childRenderers.Length == 0) return;
 
         // 计算出当前的 HDR 颜色
@@ -87,5 +88,11 @@ public class GroupGlowController : MonoBehaviour
     public void SetGroupGlow(bool status)
     {
         isGlowing = status;
+    }
+
+    public void SetGlowColor(Color glowColor)
+    {
+        this.glowColor = glowColor;
+        UpdateGroupGlow();
     }
 }

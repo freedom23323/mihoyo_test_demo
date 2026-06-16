@@ -7,6 +7,9 @@ TagManager:
   - CinemachineTarget
   - Mud
   - Ice
+  - IceShield
+  - Destructible
+  - RayCharger
   layers:
   - Default
   - TransparentFX
