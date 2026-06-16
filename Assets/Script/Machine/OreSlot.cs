@@ -3,13 +3,17 @@ using UnityEngine;
 
 public class OreSlot : MonoBehaviour
 {
-    [Header("关联的发光控制器（把那台机器的父物体拖进来）")]
+    [Header("关联的发光控制器")]
     public GroupGlowController machineGlowManager;
+    
+    [Header("关联的制造机")]
+    public CraftingMachine machine;
 
     [Header("槽位自己的视觉表现（比如槽里原本是空的，放了矿后显示的矿石模型）")]
     public GameObject slotOreVisual;
 
     public GameObject interactHintUI; // “按 F 放入矿石”的世界空间UI
+    public GameObject keyBluePrint; // 蓝图显示
     
     private bool isPlayerInZone = false;
     private ThirdPersonController cachedPlayer;
@@ -18,6 +22,7 @@ public class OreSlot : MonoBehaviour
     void Start()
     {
         if (interactHintUI != null) interactHintUI.SetActive(false);
+        if(keyBluePrint != null) keyBluePrint.SetActive(false);
         if (slotOreVisual != null) slotOreVisual.SetActive(false);
     }
 
@@ -33,12 +38,15 @@ public class OreSlot : MonoBehaviour
 
                 // 槽位视觉表现：显示槽内的矿石
                 if (slotOreVisual != null) slotOreVisual.SetActive(true);
+                
+                if (keyBluePrint != null) keyBluePrint.SetActive(true);
 
                 // 【核心联动】联动你之前的脚本，让整台机器的所有子节点批量发光！
                 if (machineGlowManager != null)
                 {
                     machineGlowManager.SetGroupGlow(true); 
                 }
+                machine.ActiveMachine();
 
                 // 成功放入后，隐藏提示 UI
                 if (interactHintUI != null) interactHintUI.SetActive(false);

@@ -1,10 +1,12 @@
 using UnityEngine;
-using UnityEngine.UI; // 如果使用 TextMeshPro，请改为 using TMPro;
+using UnityEngine.UI; 
 
 public class CraftingMachine : MonoBehaviour
 {
-    [Header("机器支持制作的3个图纸")]
-    public BlueprintData[] availableBlueprints = new BlueprintData[3];
+    public static int buttonNumber = 4;
+    
+    [Header("机器支持制作的4个图纸")]
+    public BlueprintData[] availableBlueprints = new BlueprintData[buttonNumber];
 
     [Header("物体生成的位置（地面上某个Transform）")]
     public Transform spawnPoint;
@@ -17,6 +19,8 @@ public class CraftingMachine : MonoBehaviour
 
     private bool isPlayerInZone = false;       // 玩家是否在触发区域内
     private PlayerInventory cachedPlayerInventory; // 缓存进入区域的玩家背包组件
+    
+    private bool isActive = false;
 
     void Start()
     {
@@ -29,6 +33,7 @@ public class CraftingMachine : MonoBehaviour
 
     void Update()
     {
+        if (!isActive) return;
         // 【核心按键监听】如果玩家在区域内，且按下了 E 键
         if (isPlayerInZone && Input.GetKeyDown(KeyCode.E))
         {
@@ -107,5 +112,10 @@ public class CraftingMachine : MonoBehaviour
             Instantiate(prefab, spawnPoint.position, spawnPoint.rotation);
             Debug.Log("物体生成成功！");
         }
+    }
+
+    public void ActiveMachine()
+    {
+        isActive = true;
     }
 }

@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,12 +6,11 @@ public class MachineUIController : MonoBehaviour
 {
     public GameObject uiPanel; // UI 的父节点（用于显示/隐藏）
     
-    // 拖入场景中的 3 个按钮
-    public Button[] craftButtons = new Button[3]; 
-    // 拖入 3 个按钮文本，用来显示物体名字
-    public Text[] buttonTexts = new Text[3];     
-
     private CraftingMachine currentMachine;
+    // 拖入场景中的 4 个按钮
+    public Button[] craftButtons = new Button[CraftingMachine.buttonNumber]; 
+    // 拖入 4 个按钮文本，用来显示物体名字
+    public TextMeshProUGUI[] buttonTexts = new TextMeshProUGUI[CraftingMachine.buttonNumber];     
 
     void Start()
     {
@@ -24,12 +24,12 @@ public class MachineUIController : MonoBehaviour
         uiPanel.SetActive(true);
 
         // 遍历 3 个选项
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < CraftingMachine.buttonNumber; i++)
         {
             if (i >= blueprints.Length || blueprints[i] == null) continue;
 
             BlueprintData data = blueprints[i];
-            //buttonTexts[i].text = data.itemName;
+            buttonTexts[i].text = data.itemName;
 
             // 【核心逻辑】检查玩家的 HashSet 里有没有这张图纸的 ID
             bool isUnlocked = player.unlockedBlueprintIDs.Contains(data.blueprintID);

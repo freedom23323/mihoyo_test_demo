@@ -19,9 +19,30 @@ public class GroupGlowController : MonoBehaviour
 
     void Start()
     {
-        // 【核心操作】自动获取父物体以及所有子物体身上的 Renderer 组件
         childRenderers = GetComponentsInChildren<Renderer>();
         propBlock = new MaterialPropertyBlock();
+
+        // 【核心修复代码】
+        // 遍历所有子物体，强行让它们当前使用的材质球开启 URP 的自发光关键字
+        foreach (var renderer in childRenderers)
+        {
+            if (renderer == null) continue;
+        
+            // 获取材质球引用的数组（注意：在编辑模式下或者这里用 sharedMaterials 开启关键字）
+            foreach (var mat in renderer.sharedMaterials)
+            {
+                if (mat == null) continue;
+
+                // 1. 激活 URP 自发光的底层宏/关键字
+                mat.EnableKeyword("_EMISSION");
+            
+                // 2. 如果你用的是标准 URP/Lit，顺便确保它的内部发光全局开关打开
+                if (mat.HasProperty("_EmissionEnabled"))
+                {
+                    mat.SetFloat("_EmissionEnabled", 1.0f);
+                }
+            }
+        }
 
         // 游戏开始时同步一次初始状态
         UpdateGroupGlow();
