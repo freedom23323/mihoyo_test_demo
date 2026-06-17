@@ -10,11 +10,13 @@ public class RayCharger : MonoBehaviour,IHittable
 
     public GameObject iceBluePrint;
     public CraftingMachine machine;
+    public CoolingTank coolingTank;
+    
     private bool isActive = false;
     // Start is called before the first frame update
     void Start()
     {
-        iceBluePrint.SetActive(false);
+        if(iceBluePrint!=null) iceBluePrint.SetActive(false);
     }
 
     // Update is called once per frame
@@ -30,8 +32,9 @@ public class RayCharger : MonoBehaviour,IHittable
         machineGlowManager.SetGroupGlow(true);
         IndicatorLightGlowManager.SetGroupGlow(true);
         if(iceBluePrint!=null) iceBluePrint.SetActive(true);
-        IndicatorLightGlowManager.SetGlowColor(Color.red);
-        machine.ActiveMachine();
+        if (coolingTank != null && !coolingTank.isHot) coolingTank.ActivateTankByRayCharger();
+        else IndicatorLightGlowManager.SetGlowColor(Color.red);
+        if (machine != null) machine.ActiveMachine();
         isActive = true;
     }
 }

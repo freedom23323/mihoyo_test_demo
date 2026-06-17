@@ -34,6 +34,10 @@ namespace StarterAssets
         [Header("视觉表现（玩家手里的矿石模型，可不填）")]
         public GameObject heldOreVisual;
 
+        [Header("Q键冰块互动设置")]
+        [SerializeField] private GameObject handIceVisual;      // 玩家手里的冰块模型（默认在场景中隐藏）
+        [SerializeField] private ItemID iceItemID = ItemID.ice;
+        
         [Tooltip("Acceleration and deceleration")]
         public float SpeedChangeRate = 10.0f;
 
@@ -114,6 +118,7 @@ namespace StarterAssets
         private CharacterController _controller;
         private StarterAssetsInputs _input;
         private GameObject _mainCamera;
+        private PlayerInventory inventory; // 引用自身的背包脚本
 
         private const float _threshold = 0.01f;
 
@@ -153,6 +158,14 @@ namespace StarterAssets
 #else
 			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
+            // 获取挂在同一个玩家物体上的背包组件
+            inventory = GetComponent<PlayerInventory>();
+
+            // 初始确保手里的冰块是隐藏的
+            if (handIceVisual != null)
+            {
+                handIceVisual.SetActive(false);
+            }
 
             AssignAnimationIDs();
             UpdateVisual();
@@ -170,6 +183,10 @@ namespace StarterAssets
             GroundedCheck();
             CheckGroundSpeed();
             Move();
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                HandleIceToggle();
+            }
         }
 
         private void LateUpdate()
@@ -197,6 +214,42 @@ namespace StarterAssets
                 heldOreVisual.SetActive(isCarryingOre);
             }
         }
+        
+        private void HandleIceToggle()
+        {
+            if (inventory == null)
+            {
+                Debug.LogError("Player身上未找到 PlayerInventory 背包组件！");
+                return;
+            }
+
+            if (handIceVisual == null)
+            {
+                Debug.LogWarning("未绑定手里的冰块模型 (Hand Ice Visual)！");
+                return;
+            }
+
+            // 核心判定：如果玩家手里的冰块当前是显示的，直接允许按Q收回（不重复判定背包）
+            if (handIceVisual.activeSelf)
+            {
+                handIceVisual.SetActive(false);
+                Debug.Log("收回手里的冰块。");
+            }
+            else
+            {
+                // 如果冰块当前是隐藏的，必须检查哈希表背包里是否有冰块
+                if (inventory.GetItemCount(iceItemID) > 0)
+                {
+                    handIceVisual.SetActive(true);
+                    Debug.Log("拿出背包里的冰块展示！");
+                }
+                else
+                {
+                    Debug.LogWarning($"背包里没有 [{iceItemID}]，无法显示！");
+                }
+            }
+        }
+        
         private void AssignAnimationIDs()
         {
             _animIDSpeed = Animator.StringToHash("Speed");

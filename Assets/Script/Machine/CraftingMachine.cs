@@ -20,7 +20,7 @@ public class CraftingMachine : MonoBehaviour
     private bool isPlayerInZone = false;       // 玩家是否在触发区域内
     private PlayerInventory cachedPlayerInventory; // 缓存进入区域的玩家背包组件
     
-    private bool isActive = false;
+    [SerializeField] private bool isActive = false;
 
     void Start()
     {

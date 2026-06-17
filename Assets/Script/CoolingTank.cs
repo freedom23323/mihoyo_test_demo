@@ -14,6 +14,9 @@ public class CoolingTank : MonoBehaviour
     [SerializeField] private bool consumeIce = true;            // 放入后是否扣除背包里的冰块
 
     [SerializeField] private GroupGlowController thermometer;
+    [SerializeField] private Color thermometerColor= Color.magenta;
+    public bool isHot = true;
+    
     private bool isPlayerInZone = false;
     private PlayerInventory cachedPlayerInventory;
     private bool isActivated = false;                          // 降温槽是否已经激活过，防止重复触发
@@ -44,7 +47,7 @@ public class CoolingTank : MonoBehaviour
     }
 
     // 激活降温槽的核心逻辑
-    private void ActivateTank()
+    public void ActivateTank()
     {
         isActivated = true;
 
@@ -68,15 +71,16 @@ public class CoolingTank : MonoBehaviour
 
         if (thermometer != null)
         {
-            thermometer.SetGlowColor(Color.blue);
+            thermometer.SetGlowColor(thermometerColor);
         }
+        
+        if (key2BluePrint!= null) key2BluePrint.SetActive(true);
+        
         // 4. 核心联动：命令特殊的门打开
         if (targetDoor != null)
         {
             targetDoor.OpenDoorByTank();
         }
-        
-        if (key2BluePrint!= null) key2BluePrint.SetActive(true);
         
         else
         {
@@ -85,7 +89,34 @@ public class CoolingTank : MonoBehaviour
 
         Debug.Log("降温槽已成功放入冰块，触发开门！");
     }
+    public void ActivateTankByRayCharger()
+    {
+        isActivated = true;
 
+        if (iceVisualObject != null)
+        {
+            iceVisualObject.SetActive(true);
+        }
+
+        if (thermometer != null)
+        {
+            thermometer.SetGlowColor(thermometerColor);
+        }
+        
+        if (key2BluePrint!= null) key2BluePrint.SetActive(true);
+        
+        if (targetDoor != null)
+        {
+            targetDoor.OpenDoorByTank();
+        }
+        
+        else
+        {
+            Debug.LogError("未绑定联动的特殊门(Target Door)！");
+        }
+
+        Debug.Log("降温槽已有冰块，触发开门！");
+    }
     // ─── 玩家范围检测 ───
 
     private void OnTriggerEnter(Collider other)

@@ -8,6 +8,7 @@ public class RoadController : MonoBehaviour
     [Header("初始状态")]
     [SerializeField] private bool isRoadActive = false; // 默认道路是关闭的
 
+    [SerializeField] private RobotWaypointPatrol robotWaypointPatrol;
     void Start()
     {
         // 根据初始设置初始化道路状态
@@ -26,6 +27,7 @@ public class RoadController : MonoBehaviour
         isRoadActive = !isRoadActive;
         roadObject.SetActive(isRoadActive);
 
+        //if (robotWaypointPatrol != null) robotWaypointPatrol.SetIsMoving(isRoadActive);//影响机器人是否移动
         // 可以在这里添加一些音效或粒子效果
         if (isRoadActive)
         {
