@@ -4,6 +4,7 @@ public class MechanismTrigger : MonoBehaviour
 {
     [Header("绑定对应的道路控制器")]
     [SerializeField] private RoadController roadController;
+    [SerializeField] private ObjectSelfRotator objectSelfRotator;
     public GameObject interactHintUI; 
     private bool isPlayerInZone = false; // 玩家是否在交互范围内
 
@@ -19,6 +20,7 @@ public class MechanismTrigger : MonoBehaviour
             if (roadController != null)
             {
                 roadController.ToggleRoad();
+                if (objectSelfRotator != null) objectSelfRotator.ToggleRotating();
             }
         }
     }
