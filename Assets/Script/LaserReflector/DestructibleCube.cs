@@ -19,6 +19,6 @@ public class DestructibleCube : MonoBehaviour,IDestructible
     public void OnLaserHit(Vector3 hitPoint)
     {
         Debug.Log("OnLaserHit!");
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }
