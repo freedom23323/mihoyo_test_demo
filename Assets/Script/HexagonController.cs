@@ -13,7 +13,7 @@ public class HexagonController : MonoBehaviour
 
     [Header("六边形配置")]
     [SerializeField] private HexEdge[] hexagonEdges = new HexEdge[6]; // 六边形的6条边
-    [SerializeField] private GameObject[] allNodes = new GameObject[6]; // 填入所有的6个顶点物体，用于统一检测存活
+    [SerializeField] private GameObject[] allEdges = new GameObject[6]; // 填入所有的6个边物体，用于统一检测存活
 
     [SerializeField] private GroupGlowController MasterGlowController;
     [SerializeField] private GroupGlowController DoorGlowController;
@@ -30,7 +30,7 @@ public class HexagonController : MonoBehaviour
         // 2. 检查是否所有顶点都已经被破坏
         if (!hasTriggeredFinalAction)
         {
-            CheckAllNodesDestroyed();
+            CheckAllEdgesDestroyed();
         }
     }
 
@@ -53,17 +53,17 @@ public class HexagonController : MonoBehaviour
         }
     }
 
-    private void CheckAllNodesDestroyed()
+    private void CheckAllEdgesDestroyed()
     {
-        if (allNodes == null || allNodes.Length == 0) return;
+        if (allEdges == null || allEdges.Length == 0) return;
 
         // 假设全被破坏了
         bool allDestroyed = true;
 
         // 遍历所有顶点，只要有一个还在场景中激活，说明没全灭
-        for (int i = 0; i < allNodes.Length; i++)
+        for (int i = 0; i < allEdges.Length; i++)
         {
-            if (allNodes[i] != null && allNodes[i].activeInHierarchy)
+            if (allEdges[i] != null && allEdges[i].activeInHierarchy)
             {
                 allDestroyed = false;
                 break; // 跳出循环
