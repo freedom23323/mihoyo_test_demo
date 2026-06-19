@@ -20,6 +20,7 @@ public class HexagonController : MonoBehaviour
     //[Header("全破发事件触发")]
     //[SerializeField] private UnityEvent onAllNodesDestroyed; // 当所有顶点都被破坏时执行的事件
 
+    [SerializeField] private AudioClip successClip;
     private bool hasTriggeredFinalAction = false; // 是否已经触发过最终功能，防止重复触发
 
     void Update()
@@ -83,5 +84,6 @@ public class HexagonController : MonoBehaviour
         Debug.Log("【核心机关解锁】六边形的所有顶点已全部被破坏！");
         MasterGlowController.SetGroupGlow(false);
         DoorGlowController.SetGroupGlow(true);
+        AudioEffectPlayer.Instance.PlaySFX(successClip);
     }
 }
